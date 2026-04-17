@@ -1,0 +1,18 @@
+{
+    "manifest_version": 3,
+    "name": "Cookie Transparency",
+    "version": "1.0",
+    "description": "Visualize and understand cookies on any page.",
+    "permissions": [
+        "cookies",
+        "activeTab",
+        "tabs"
+    ],
+    "host_permissions": [
+        "<all_urls>"
+    ],
+    "action": {
+        "default_popup": "popup.html",
+        "default_title": "Cookie Transparency"
+    }
+}
