@@ -17,7 +17,7 @@
         <p class="header-sub">Already set cookies if you click <strong>Accept All</strong></p>
     </header>
 
-    <section class="chart-grid">
+    <div class="chart-grid">
         <div class="chart-card">
             <h2>By purpose</h2>
             <canvas id="chart-purpose" width="130" height="130"></canvas>
@@ -32,14 +32,15 @@
             <h2>By origin</h2>
             <div id="origin-viz"></div>
         </div>
-    </section>
+    </div>
 
     <section class="cookie-list">
         <h2 class="section-title">All cookies</h2>
 
-        <div class="accordion" id="accordion-purpose">
+        <div class="accordion">
             <button class="accordion-btn" data-target="acc-purpose">
-                <span class="acc-icon">▸</span> By purpose
+                <span class="acc-chevron" id="chevron-purpose">▶</span>
+                <span class="acc-label">By purpose</span>
                 <span class="acc-count" id="count-purpose"></span>
             </button>
             <div class="accordion-body" id="acc-purpose">
@@ -47,9 +48,10 @@
             </div>
         </div>
 
-        <div class="accordion" id="accordion-origin">
+        <div class="accordion">
             <button class="accordion-btn" data-target="acc-origin">
-                <span class="acc-icon">▸</span> By origin
+                <span class="acc-chevron" id="chevron-origin">▶</span>
+                <span class="acc-label">By origin</span>
                 <span class="acc-count" id="count-origin"></span>
             </button>
             <div class="accordion-body" id="acc-origin">

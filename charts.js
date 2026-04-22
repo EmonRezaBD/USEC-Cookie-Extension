@@ -1,28 +1,34 @@
-// Risk-based colors for each purpose (red = highest risk, blue = lowest)
 const PURPOSE_COLORS = {
-    advertising: "#E24B4A",   // red   — highest risk
-    social: "#EF7C2A",   // orange
-    performance: "#EFC12A",   // amber
-    preference: "#639922",   // green
-    essential: "#378ADD",   // blue   — lowest risk
+    advertising: "#FF3B30",
+    social: "#FF9500",
+    performance: "#FFCC00",
+    preference: "#34C759",
+    essential: "#007AFF",
 };
 
 const DURATION_COLORS = {
-    persistent: "#E24B4A",
-    session: "#639922",
+    persistent: "#FF3B30",
+    session: "#34C759",
 };
 
 function drawDonut(canvasId, data, colorMap) {
     const canvas = document.getElementById(canvasId);
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
-    const cx = canvas.width / 2, cy = canvas.height / 2;
-    const R = Math.min(cx, cy) - 8, r = R * 0.56;
+    const dpr = window.devicePixelRatio || 1;
+    const size = canvas.width;
+    canvas.width = size * dpr;
+    canvas.height = size * dpr;
+    canvas.style.width = size + "px";
+    canvas.style.height = size + "px";
+    ctx.scale(dpr, dpr);
+
+    const cx = size / 2, cy = size / 2;
+    const R = size / 2 - 7, r = R * 0.57;
     const total = Object.values(data).reduce((a, b) => a + b, 0);
     let angle = -Math.PI / 2;
+    const GAP = 0.025;
 
-    // Draw gap-separated slices
-    const GAP = 0.03;
     Object.entries(data).forEach(([key, value]) => {
         const slice = (value / total) * 2 * Math.PI - GAP;
         ctx.beginPath();
@@ -34,30 +40,28 @@ function drawDonut(canvasId, data, colorMap) {
         angle += slice + GAP;
     });
 
-    // Hole
+    // Center hole
     ctx.beginPath();
     ctx.arc(cx, cy, r, 0, 2 * Math.PI);
     ctx.fillStyle = "#ffffff";
     ctx.fill();
 
-    // Center count
-    ctx.fillStyle = "#222";
-    ctx.font = "bold 20px system-ui";
+    // Center label
+    ctx.fillStyle = "#1C1C1E";
+    ctx.font = "700 19px Inter, -apple-system, sans-serif";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.fillText(total, cx, cy);
 }
 
-// By origin: icon-based split view instead of % bars
+// Origin viz — split card only, no bar or percentage
 function drawOriginViz(containerId, data, cookies) {
     const container = document.getElementById(containerId);
     if (!container) return;
 
     const first = data["1st party"] || 0;
     const third = data["3rd party"] || 0;
-    const total = first + third;
 
-    // Group third-party domains
     const thirdDomains = {};
     cookies.filter(c => !c.firstParty).forEach(c => {
         thirdDomains[c.domain] = (thirdDomains[c.domain] || 0) + 1;
@@ -82,16 +86,6 @@ function drawOriginViz(containerId, data, cookies) {
         `<span class="domain-pill">${d} <b>${n}</b></span>`
     ).join("")}
         </div>
-      </div>
-    </div>
-    <div class="origin-track-wrap">
-      <div class="origin-track">
-        <div class="origin-bar-first" style="width:${Math.round(first / total * 100)}%"></div>
-        <div class="origin-bar-third" style="width:${Math.round(third / total * 100)}%"></div>
-      </div>
-      <div class="origin-track-labels">
-        <span>${Math.round(first / total * 100)}% 1st party</span>
-        <span>${Math.round(third / total * 100)}% 3rd party</span>
       </div>
     </div>
   `;
