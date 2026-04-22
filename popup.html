@@ -9,31 +9,53 @@
 
 <body>
     <header>
-        <span class="icon">🍪</span>
-        <h1>Cookie Transparency</h1>
-        <span id="total-badge">—</span>
+        <div class="header-top">
+            <span class="icon">🍪</span>
+            <h1>Cookie Transparency</h1>
+            <span id="total-badge">—</span>
+        </div>
+        <p class="header-sub">Already set cookies if you click <strong>Accept All</strong></p>
     </header>
 
     <section class="chart-grid">
         <div class="chart-card">
             <h2>By purpose</h2>
-            <canvas id="chart-purpose" width="120" height="120"></canvas>
+            <canvas id="chart-purpose" width="130" height="130"></canvas>
             <div id="legend-purpose" class="legend"></div>
         </div>
         <div class="chart-card">
             <h2>By duration</h2>
-            <canvas id="chart-type" width="120" height="120"></canvas>
+            <canvas id="chart-type" width="130" height="130"></canvas>
             <div id="legend-type" class="legend"></div>
         </div>
         <div class="chart-card wide">
             <h2>By origin</h2>
-            <div id="bars-origin"></div>
+            <div id="origin-viz"></div>
         </div>
     </section>
 
     <section class="cookie-list">
-        <h2>All cookies <span id="filter-tag"></span></h2>
-        <div id="cookie-rows"></div>
+        <h2 class="section-title">All cookies</h2>
+
+        <div class="accordion" id="accordion-purpose">
+            <button class="accordion-btn" data-target="acc-purpose">
+                <span class="acc-icon">▸</span> By purpose
+                <span class="acc-count" id="count-purpose"></span>
+            </button>
+            <div class="accordion-body" id="acc-purpose">
+                <div id="cookies-by-purpose"></div>
+            </div>
+        </div>
+
+        <div class="accordion" id="accordion-origin">
+            <button class="accordion-btn" data-target="acc-origin">
+                <span class="acc-icon">▸</span> By origin
+                <span class="acc-count" id="count-origin"></span>
+            </button>
+            <div class="accordion-body" id="acc-origin">
+                <div id="cookies-by-origin"></div>
+            </div>
+        </div>
     </section>
 
     <script src="cookies.js"></script>
