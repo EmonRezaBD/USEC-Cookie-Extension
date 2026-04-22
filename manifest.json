@@ -2,17 +2,46 @@
     "manifest_version": 3,
     "name": "Cookie Transparency",
     "version": "1.0",
-    "description": "Visualize and understand cookies on any page.",
+    "description": "See what cookies are already set before you click Accept All.",
     "permissions": [
-        "cookies",
+        "tabs",
+        "storage",
         "activeTab",
-        "tabs"
+        "scripting"
     ],
     "host_permissions": [
         "<all_urls>"
     ],
+    "background": {
+        "service_worker": "background.js"
+    },
     "action": {
         "default_popup": "popup.html",
         "default_title": "Cookie Transparency"
-    }
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "http://*/*",
+                "https://*/*"
+            ],
+            "js": [
+                "content.js"
+            ],
+            "css": [
+                "overlay.css"
+            ],
+            "run_at": "document_end"
+        }
+    ],
+    "web_accessible_resources": [
+        {
+            "resources": [
+                "overlay.css"
+            ],
+            "matches": [
+                "<all_urls>"
+            ]
+        }
+    ]
 }
