@@ -25,17 +25,38 @@ A Chrome browser extension that shows you what cookies are already set on a webs
 ## File Structure
 
 ```
-cookie-transparency/
-├── manifest.json       — Extension config & permissions
-├── background.js       — Detects new page navigations
-├── content.js          — Injects the overlay panel into pages
-├── overlay.css         — Styles for the in-page overlay
-├── popup.html          — Toolbar popup UI
-├── popup.js            — Popup logic & chart rendering
-├── popup.css           — Popup styles
-├── charts.js           — Donut chart drawing
-├── cookies.js          — Simulated cookie data
-└── icon{16,32,48,128}.png
+USEC-Cookie-Extension/
+├── manifest.json                   — Extension config & permissions (must stay in root)
+├── README.md
+├── LICENSE
+│
+├── assets/
+│   └── icons/
+│       ├── icon16.png
+│       ├── icon32.png
+│       ├── icon48.png
+│       └── icon128.png
+│
+├── src/
+│   ├── background/
+│   │   └── background.js           — Detects new page navigations
+│   │
+│   ├── content/
+│   │   ├── content.js              — Injects the overlay panel into pages
+│   │   └── overlay.css             — Styles for the in-page overlay
+│   │
+│   ├── popup/
+│   │   ├── popup.html              — Toolbar popup UI
+│   │   ├── popup.js                — Popup logic & chart rendering
+│   │   └── popup.css               — Popup styles
+│   │
+│   └── shared/
+│       ├── cookies.js              — Simulated cookie data
+│       └── charts.js               — Donut chart drawing
+│
+└── images/                         — README screenshots
+    ├── installedExtension.png
+    └── outputWindow.png
 ```
 
 ---
@@ -48,7 +69,7 @@ cookie-transparency/
 2. Open Chrome and go to `chrome://extensions`
 3. Enable **Developer mode** using the toggle in the top-right corner
 4. Click **Load unpacked**
-5. Select the `cookie-transparency/` folder
+5. Select the root `USEC-Cookie-Extension/` folder
 6. Pin the extension from the puzzle icon in the toolbar
 
 That's it — navigate to any website and the panel will appear automatically.
@@ -73,6 +94,18 @@ The overlay runs inside a **Shadow DOM** so it never conflicts with the page's o
 
 ---
 
+## Path Rules (for contributors)
+
+Chrome resolves paths differently depending on where they are referenced:
+
+| Location | Path is relative to |
+|---|---|
+| `manifest.json` | Root of the extension folder |
+| `popup.html` script/link tags | `popup.html`'s own location |
+| `chrome.runtime.getURL()` | Root of the extension folder |
+
+---
+
 ## Compatibility
 
 | Browser | Status |
@@ -87,7 +120,7 @@ The overlay runs inside a **Shadow DOM** so it never conflicts with the page's o
 
 ## Note on Cookie Data
 
-This prototype uses **simulated cookie data** for demonstration purposes. The 12 cookies shown (session_id, _ga, _fbp, etc.) represent a realistic set of what a typical e-commerce site sets. Real cookie detection can be enabled by swapping the mock data in `cookies.js` with a live `chrome.cookies.getAll()` call.
+This prototype uses **simulated cookie data** for demonstration purposes. The 12 cookies shown (`session_id`, `_ga`, `_fbp`, etc.) represent a realistic set of what a typical e-commerce site sets. Real cookie detection can be enabled by swapping the mock data in `src/shared/cookies.js` with a live `chrome.cookies.getAll()` call.
 
 ---
 

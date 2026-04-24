@@ -1,29 +1,21 @@
 {
-    "manifest_version": 3,
-    "name": "Cookie Transparency",
-    "version": "1.0",
-    "description": "See what cookies are already set before you click Accept All.",
-    "permissions": [
-        "tabs",
-        "storage",
-        "activeTab",
-        "scripting"
-    ],
-    "host_permissions": [
-        "<all_urls>"
-    ],
     "background": {
-        "service_worker": "background.js"
+        "service_worker": "src/background/background.js"
     },
     "action": {
-        "default_popup": "popup.html",
-        "default_title": "Cookie Transparency",
+        "default_popup": "src/popup/popup.html",
         "default_icon": {
-            "16": "icon16.png",
-            "32": "icon32.png",
-            "48": "icon48.png",
-            "128": "icon128.png"
+            "16": "assets/icons/icon16.png",
+            "32": "assets/icons/icon32.png",
+            "48": "assets/icons/icon48.png",
+            "128": "assets/icons/icon128.png"
         }
+    },
+    "icons": {
+        "16": "assets/icons/icon16.png",
+        "32": "assets/icons/icon32.png",
+        "48": "assets/icons/icon48.png",
+        "128": "assets/icons/icon128.png"
     },
     "content_scripts": [
         {
@@ -32,10 +24,10 @@
                 "https://*/*"
             ],
             "js": [
-                "content.js"
+                "src/content/content.js"
             ],
             "css": [
-                "overlay.css"
+                "src/content/overlay.css"
             ],
             "run_at": "document_end"
         }
@@ -43,17 +35,11 @@
     "web_accessible_resources": [
         {
             "resources": [
-                "overlay.css"
+                "src/content/overlay.css"
             ],
             "matches": [
                 "<all_urls>"
             ]
         }
-    ],
-    "icons": {
-        "16": "icon16.png",
-        "32": "icon32.png",
-        "48": "icon48.png",
-        "128": "icon128.png"
-    }
+    ]
 }
