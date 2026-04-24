@@ -10,8 +10,6 @@ A Chrome browser extension that shows you what cookies are already set on a webs
 |:---:|:---:|
 | ![Prototype Screenshot 1](images/installedExtension.png) | ![Prototype Screenshot 2](images/outputWindow.png) |
 
-> 📁 Add your prototype images to an `images/` folder and rename them `screenshot-1.png` and `screenshot-2.png`
-
 ---
 
 ## What It Does
