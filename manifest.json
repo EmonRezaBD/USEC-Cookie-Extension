@@ -1,9 +1,23 @@
 {
+    "manifest_version": 3,
+    "name": "Cookie Transparency",
+    "version": "1.0",
+    "description": "See what cookies are already set before you click Accept All.",
+    "permissions": [
+        "tabs",
+        "storage",
+        "activeTab",
+        "scripting"
+    ],
+    "host_permissions": [
+        "<all_urls>"
+    ],
     "background": {
         "service_worker": "src/background/background.js"
     },
     "action": {
         "default_popup": "src/popup/popup.html",
+        "default_title": "Cookie Transparency",
         "default_icon": {
             "16": "assets/icons/icon16.png",
             "32": "assets/icons/icon32.png",
