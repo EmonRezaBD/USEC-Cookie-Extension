@@ -1,52 +1,54 @@
 // background.js — service worker
-// Fires when a tab finishes loading a new page.
-// Sends a message to the content script to show the overlay.
 
 const IGNORED_SCHEMES = ["chrome://", "chrome-extension://", "about:", "data:", "file://"];
 
-// Track which tabs we've already shown the overlay for in this session
-// so we don't re-show it on every reload — only on domain changes.
-const shownForTab = {};   // tabId -> hostname
+const shownForTab = {}; // tabId -> hostname
 
-chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-    // Trigger as soon as navigation starts, not after full page load
-    if (changeInfo.status !== "loading") return;
+chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
+    // Wait for complete — more reliable on Windows than "loading"
+    if (changeInfo.status !== "complete") return;
     if (!tab.url) return;
 
-    // Skip internal Chrome pages
-    const isIgnored = IGNORED_SCHEMES.some(s => tab.url.startsWith(s));
+    var isIgnored = IGNORED_SCHEMES.some(function (s) { return tab.url.startsWith(s); });
     if (isIgnored) return;
 
-    let hostname;
+    var hostname;
     try {
         hostname = new URL(tab.url).hostname;
-    } catch {
+    } catch (e) {
         return;
     }
 
-    // Only show once per unique hostname per tab lifetime
     if (shownForTab[tabId] === hostname) return;
     shownForTab[tabId] = hostname;
 
-    // Fire immediately — no delay needed for simulated data
+    // First try sending to already-injected content script
     chrome.tabs.sendMessage(tabId, {
         type: "SHOW_COOKIE_OVERLAY",
-        hostname
-    }).catch(() => {
-        // Content script not yet ready — inject it on demand as fallback
-        chrome.scripting.executeScript({
-            target: { tabId },
-            files: ["content.js"]
-        }).then(() => {
-            chrome.tabs.sendMessage(tabId, {
-                type: "SHOW_COOKIE_OVERLAY",
-                hostname
-            }).catch(() => { });
-        }).catch(() => { });
+        hostname: hostname
+    }, function (response) {
+        if (chrome.runtime.lastError) {
+            // Content script not ready — inject it, then send after a short wait
+            chrome.scripting.executeScript({
+                target: { tabId: tabId },
+                files: ["content.js"]
+            }, function () {
+                if (chrome.runtime.lastError) return;
+                // Small wait for script to register its listener
+                setTimeout(function () {
+                    chrome.tabs.sendMessage(tabId, {
+                        type: "SHOW_COOKIE_OVERLAY",
+                        hostname: hostname
+                    }, function () {
+                        // Ignore any remaining errors
+                        var _ = chrome.runtime.lastError;
+                    });
+                }, 100);
+            });
+        }
     });
 });
 
-// Clean up when tab is closed
-chrome.tabs.onRemoved.addListener((tabId) => {
+chrome.tabs.onRemoved.addListener(function (tabId) {
     delete shownForTab[tabId];
 });
